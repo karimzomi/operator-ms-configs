@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: complaint-microservice
+  datasource:
+    url: jdbc:postgresql://localhost:5433/complaint-db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  cloud:
+    config:
+      enabled: false
+
+server:
+  port: 8082
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.axonframework: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+resilience4j:
+  retry:
+    instances:
+      myRegistry:
+        max-attempts: 3
+        wait-duration: 500ms
+  ratelimiter:
+    instances:
+      myRateLimiter:
+        limit-for-period: 5
+        limit-refresh-period: 1s
+        timeout-duration: 500ms
+
+axon:
+  eventhandling:
+    processors:
+      clientProcessor:
+        mode: tracking
+        source: eventStore
+        initial-segment-count: 1
+  axonserver:
+    servers: localhost:8124
+    event-store-configuration:
+      enabled: true
+    client-id: complaint_microservice
+  serializer:
+    general: jackson
