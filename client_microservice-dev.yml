@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5431/msdb
+    username: postgres
+    password: 123456789
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+axon:
+  eventhandling:
+    processors:
+      clientProcessor:
+        mode: tracking
+        source: eventStore
+        initial-segment-count: 1
+  axonserver:
+    event-store-configuration:
+      enabled: true
+  serializer:
+    general: jackson

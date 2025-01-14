@@ -1,0 +1,38 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+logging:
+  level:
+    root: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, prometheus
+  tracing:
+    sampling:
+      probability: 1.0
+    zipkin:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+resilience4j:
+  retry:
+    instances:
+      myRegistry:
+        max-attempts: 3
+        wait-duration: 500ms
+  ratelimiter:
+    instances:
+      myRateLimiter:
+        limit-for-period: 5
+        limit-refresh-period: 1s
+        timeout-duration: 500ms
